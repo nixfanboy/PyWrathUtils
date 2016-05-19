@@ -31,7 +31,7 @@ class Logger:
         self.console = writeConsole
 
     def close(self):
-        if not self.fout.closed:
+        if self.fout is not None and not self.fout.closed:
             self.fout.close()
 
     def isClosed(self):
