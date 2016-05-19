@@ -17,6 +17,12 @@ class Config:
             self.confFile = configFile
             self.load(configFile)
     
+    def clear(self):
+        """
+        Clears the current configuration.
+        """
+        self.confMap.clear()
+    
     def get(self, key, defaultValue = None):
         """
         Returns a stored value.
@@ -76,6 +82,21 @@ class Config:
         except IOError:
             print("] ERROR: Could not load config file '" + configFile + "'! I/O Error!")
             return
+    
+    def reload(self):
+        """
+        Clears the current configuration and reloads it from file specified in the constructor.
+        """
+        self.confMap.clear()
+        self.load()
+        
+    def reload(self, configFile):
+        """
+        Clears the current configuration and reloads it from file specified.
+        configFile: The file to load the configuration from.
+        """
+        self.confMap.clear()
+        self.load(configFile)
     
     def save(self):
         """
