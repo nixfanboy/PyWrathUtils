@@ -2,10 +2,18 @@
 # Python Wrath Utils Copyright (c) 2016 Trent Spears
 
 from datetime import datetime
+from enum import Enum
 
-def getTimestamp():
+class TimestampFormat(Enum):
+    STANDARD = 0
+    US = 1
+
+def getTimestamp(timestampFormat = TimestampFormat.STANDARD):
     now = datetime.now()
-    return "[%02d/%02d/%02d][%02d:%02d:%02d]" % (now.date().day, now.date().month, now.date().year, now.time().hour, now.time().minute, now.time().second)
+    if timestampFormat == TimestampFormat.STANDARD:
+        return "[%02d/%02d/%02d][%02d:%02d:%02d]" % (now.date().day, now.date().month, now.date().year, now.time().hour, now.time().minute, now.time().second)
+    else:
+        return "[%02d/%02d/%02d][%02d:%02d:%02d]" % (now.date().month, now.date().day, now.date().year, now.time().hour, now.time().minute, now.time().second)
 
 class LogFilter:
     def filterConsole(self, log_string):
@@ -15,12 +23,13 @@ class LogFilter:
         return log_string
 
 class Logger:
-    logFile = None
-    logFilter = None
-    timeStamp = True
-    writeConsole = True
+    fout = None
+    fil = None
+    time = True
+    tsFormat = None
+    console = True
     
-    def __init__(self, logFile = None, logFilter = None, timeStamp = True, writeConsole = True):
+    def __init__(self, logFile = None, logFilter = None, timeStamp = True, timestampFormat = TimestampFormat.STANDARD, writeConsole = True):
         if logFile is not None and len(logFile) > 0:
             try:
                 self.fout = open(logFile, "a")
@@ -36,6 +45,7 @@ class Logger:
             self.fil = LogFilter()
 
         self.time = timeStamp
+        self.tsFormat = timestampFormat
         self.console = writeConsole
 
     def close(self):
@@ -48,7 +58,7 @@ class Logger:
     def print(self, message):
         prepp = ""
         if self.time is True:
-            prepp = getTimestamp() + " "
+            prepp = getTimestamp(self.tsFormat) + " "
         if self.console is True:
             finmsg = self.fil.filterConsole(message)
             if finmsg is not None:
