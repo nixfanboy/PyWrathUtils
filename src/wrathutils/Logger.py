@@ -15,6 +15,11 @@ class LogFilter:
         return log_string
 
 class Logger:
+    logFile = None
+    logFilter = None
+    timeStamp = True
+    writeConsole = True
+    
     def __init__(self, logFile = None, logFilter = None, timeStamp = True, writeConsole = True):
         if logFile is not None and len(logFile) > 0:
             try:
