@@ -11,24 +11,33 @@ class CompressionType(Enum):
     BZIP2 = 1
     LZMA = 2
 
-# Compresses specified data. compressionType is the format in CompressionType enum. compressLevel is compression scale from 1-9 - 1 being little compression, 9 being heavy compression.
 def compress(data, compressionType = CompressionType.GZIP, compressLevel = 6):
+    """
+    Compresses specified data.
+    data: The data to compress. MUST be byte data, not object or string data.
+    compressionType: The compression format to use, as specified in CompressionType enum.
+    compressLevel: Compression scale from 1-9. 1 being little compression, 9 being heavy compression.
+    """
     if compressionType == CompressionType.GZIP:
-        return zlib.compress(data, level)
+        return zlib.compress(data, compressLevel)
     elif compressionType == CompressionType.BZIP2:
-        return bz2.compress(data, level)
+        return bz2.compress(data, compressLevel)
     elif compressionType == CompressionType.LZMA:
-        return lzma.compress(b(data))
+        return lzma.compress(data)
     else:
         return data
 
-# Decompresses specified data. compressionType is the format in CompressionType enum.
 def decompress(data, compressionType = CompressionType.GZIP):
+    """
+    Decompresses specified data.
+    data: The data to decompress. MUST be byte data, not object or string data.
+    compressionType: The compression format to use, as specified in CompressionType enum.
+    """
     if compressionType == CompressionType.GZIP:
         return zlib.decompress(data)
     elif compressionType == CompressionType.BZIP2:
         return bz2.decompress(data)
     elif compressionType == CompressionType.LZMA:
-        return lzma.decompress(b(data))
+        return lzma.decompress(data)
     else:
         return data
