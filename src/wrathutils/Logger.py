@@ -1,0 +1,55 @@
+# The MIT License (MIT)
+# Python Wrath Utils Copyright (c) 2016 Trent Spears
+
+def getTimestamp():
+    return "timehere "
+
+class LogFilter:
+    def filterConsole(self, log_string):
+        return log_string
+
+    def filterLog(self, log_string):
+        return log_string
+
+class Logger:
+    def __init__(self, logFile = None, logFilter = None, timeStamp = True, writeConsole = True):
+        if logFile is not None and len(logFile) > 0:
+            try:
+                self.fout = open(logFile, "a")
+            except IOError:
+                print("] ERROR: Could not log to file '" + logFile + "'! I/O Error!")
+                self.fout = None
+        else:
+            self.fout = None
+        
+        if logFilter is not None:
+            self.fil = logFilter
+        else:
+            self.fil = LogFilter()
+
+        self.time = timeStamp
+        self.console = writeConsole
+
+    def close(self):
+        if not self.fout.closed:
+            self.fout.close()
+
+    def isClosed(self):
+        return self.fout is None or self.fout.closed
+
+    def print(self, message):
+        prepp = ""
+        if self.time is True:
+            prepp = getTimestamp()
+        if self.console is True:
+            finmsg = self.fil.filterConsole(message)
+            if finmsg is not None:
+                print(prepp + finmsg, end='')
+        if self.fout is not None and not self.fout.closed:
+            finmsg = self.fil.filterLog(message)
+            if finmsg is not None:
+                self.fout.write(prepp + finmsg)
+                self.fout.flush()
+
+    def println(self, message):
+        self.print(message + "\n")
