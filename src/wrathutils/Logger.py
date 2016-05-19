@@ -1,8 +1,11 @@
 # The MIT License (MIT)
 # Python Wrath Utils Copyright (c) 2016 Trent Spears
 
+from datetime import datetime
+
 def getTimestamp():
-    return "timehere "
+    now = datetime.now()
+    return "[%02d/%02d/%02d][%02d:%02d:%02d]" % (now.date().day, now.date().month, now.date().year, now.time().hour, now.time().minute, now.time().second)
 
 class LogFilter:
     def filterConsole(self, log_string):
@@ -40,7 +43,7 @@ class Logger:
     def print(self, message):
         prepp = ""
         if self.time is True:
-            prepp = getTimestamp()
+            prepp = getTimestamp() + " "
         if self.console is True:
             finmsg = self.fil.filterConsole(message)
             if finmsg is not None:
