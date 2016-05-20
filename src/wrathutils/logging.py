@@ -102,7 +102,7 @@ class Logger:
         message: The message to log.
         """
         message = str(message)
-        tm = get_timestamp()
+        tm = get_timestamp(self.tsFormat)
             
         if self.console is True:
             finmsg = self.fil.filter_console(message)
