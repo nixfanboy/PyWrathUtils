@@ -1,7 +1,6 @@
 # The MIT License (MIT)
 # Python Wrath Utils Copyright (c) 2016 Trent Spears
-
-from datetime import datetime
+from time import strftime
 from enum import Enum
 
 class TimestampFormat(Enum):
@@ -22,11 +21,10 @@ def get_timestamp(timestampFormat = TimestampFormat.STANDARD):
     Returns the current time and dateformatted as speicifed by TimestampFormat.
     timestampFormat: The format to return the timestamp string in, as specified by TimestampFormat enum.
     """
-    now = datetime.now()
     if timestampFormat == TimestampFormat.STANDARD:
-        return "[%02d/%02d/%02d][%02d:%02d:%02d]" % (now.date().day, now.date().month, now.date().year, now.time().hour, now.time().minute, now.time().second)
+        return strftime("[%d/%m/%Y][%H:%M:%S]")
     else:
-        return "[%02d/%02d/%02d][%02d:%02d:%02d]" % (now.date().month, now.date().day, now.date().year, now.time().hour, now.time().minute, now.time().second)
+        return strftime("[%m/%d/%Y][%H:%M:%S]")
 
 class LogFilter:
     """
@@ -55,7 +53,8 @@ class Logger:
     time = True
     tsFormat = None
     console = True
-    nl = True
+    nlc = True
+    nlf = True
     
     def __init__(self, logFile = None, logFilter = None, timeStamp = True, timestampFormat = TimestampFormat.STANDARD, writeConsole = True):
         """
@@ -103,23 +102,29 @@ class Logger:
         message: The message to log.
         """
         message = str(message)
-        prepp = ""
-        if self.time and self.nl:
-            prepp = get_timestamp() + " "
-            self.nl = False
+        tm = get_timestamp()
+            
         if self.console is True:
             finmsg = self.fil.filter_console(message)
             if finmsg is not None:
-                print(prepp + finmsg, end='')
+                if self.time and self.nlc:
+                    print(tm + " " + finmsg, end='')
+                    self.nlc = False
+                else:
+                    print(finmsg, end='')
                 if finmsg[-1:] == "\n":
-                    self.nl = True
+                    self.nlc = True
+
         if self.fout is not None and not self.fout.closed:
             finmsg = self.fil.filter_log(message)
             if finmsg is not None:
-                self.fout.write(prepp + finmsg)
+                if self.time and self.nlf:
+                    self.fout.write(tm + finmsg)
+                    self.nlf = False
+                else:
+                    self.fout.write(finmsg)
                 if finmsg[-1:] == "\n":
-                    self.nl = True
-                self.fout.flush()
+                    self.nlf = True
 
     def println(self, message):
         """
