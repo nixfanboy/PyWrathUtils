@@ -16,7 +16,7 @@ def compress(data, compressionType = CompressionType.GZIP, compressLevel = 6):
     Compresses specified data.
     data: The data to compress. MUST be byte data, not object or string data.
     compressionType: The compression format to use, as specified in CompressionType enum.
-    compressLevel: Compression scale from 1-9. 1 being little compression, 9 being heavy compression.
+    compressLevel: Compression scale from 1-9. 1 being little compression, 9 being heavy compression. No effect on LZMA.
     """
     if compressionType == CompressionType.GZIP:
         return zlib.compress(data, compressLevel)

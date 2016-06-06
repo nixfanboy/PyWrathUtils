@@ -10,11 +10,11 @@ class TimestampFormat(Enum):
     """
     Standard global time/date format. [DD/MM/YYYY][HH:MM:SS]
     """
-    STANDARD = 0
+    STANDARD
     """
     United States standard time/date format. [MM/DD/YYYY][HH:MM:SS]
     """
-    US = 1
+    US
 
 def get_timestamp(timestampFormat = TimestampFormat.STANDARD):
     """

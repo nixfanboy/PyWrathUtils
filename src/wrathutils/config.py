@@ -1,6 +1,12 @@
 # The MIT License (MIT)
 # Python Wrath Utils Copyright (c) 2016 Trent Spears
 
+def list_to_config_value(listVariable):
+    retVal = ""
+    for curVar in listVariable:
+        retVal += "," + str(curVal)
+    return retVal
+
 class Config:
     """
     Class to manage, load, and save options in a key->value format.
